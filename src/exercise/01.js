@@ -8,8 +8,8 @@ function Greeting() {
   
   function handleChange(event) {
     // 🐨 update the name here based on event.target.value
-    setName(event.target.value)
-    console.log(name)
+    setName(event.target.value);
+    console.log(name);
   }
 
   return (
