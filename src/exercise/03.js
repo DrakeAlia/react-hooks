@@ -17,7 +17,6 @@ function Name() {
   )
 }
 
-// 🐨 accept `animal` and `onAnimalChange` props to this component
 function FavoriteAnimal({animal, onAnimalChange}) {
   return (
     <div>
@@ -44,7 +43,6 @@ function App() {
         animal={animal}
         onAnimalChange={event => setAnimal(event.target.value)}
       />
-      {/* 🐨 pass the animal prop here */}
       <Display animal={animal} />
     </form>
   )
