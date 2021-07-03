@@ -5,7 +5,16 @@ import * as React from 'react'
 
 function Board() {
   // 🐨 squares is the state for this component. Add useState for squares (X)
-  const [squares, setSquares] = React.useState(Array(9).fill(null))
+  const [squares, setSquares] = React.useState(() =>
+  // Then we initialized our state with a lazy initialization function here 
+  // so that we could parse that JSON value out of localStorage. (Extra Credit 1)
+    JSON.parse(window.localStorage.getItem('squares')) || Array(9).fill(null),
+  )
+
+// We're putting stuff into localStorage. We added a useEffect to make that happen. (Extra Credit 1)
+  React.useEffect(() => {
+    window.localStorage.setItem('squares', JSON.stringify(squares))
+  }, [squares])
 
   // 🐨 We'll need the following bits of derived state: (X)
   // - nextValue ('X' or 'O')
