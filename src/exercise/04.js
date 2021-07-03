@@ -2,16 +2,29 @@
 // http://localhost:3000/isolated/exercise/04.js
 
 import * as React from 'react'
+import {useLocalStorageState} from '../utils'
 
 function Board() {
-  // 🐨 squares is the state for this component. Add useState for squares (X)
-  const [squares, setSquares] = React.useState(() =>
-  // Then we initialized our state with a lazy initialization function here 
-  // so that we could parse that JSON value out of localStorage. (Extra Credit 1)
-    JSON.parse(window.localStorage.getItem('squares')) || Array(9).fill(null),
+  // useLocalStorageState that we had in our utils. We imported it into our file here
+  //  and then used that hook to make this board component persist to the squareState
+  // in localStorage by the squares key. (Extra Credit 2)
+  const [squares, setSquares] = useLocalStorageState(
+    'squares',
+    Array(9).fill(null),
   )
+  // 🐨 squares is the state for this component. Add useState for squares (X)
+  // const [squares, setSquares] = React.useState(() =>
+  // Then we initialized our state with a lazy initialization function here
+  // so that we could parse that JSON value out of localStorage. (Extra Credit 1)
+  //   JSON.parse(window.localStorage.getItem('squares')) || Array(9).fill(null),
+  // )
 
-// We're putting stuff into localStorage. We added a useEffect to make that happen. (Extra Credit 1)
+  // function useLocalStorageState(key, defaultValue = '') {
+  //   const [state, setState] = React.useState(
+  //     () => window.localStorage.getItem(key) || defaultValue,
+  //   )
+
+  // We're putting stuff into localStorage. We added a useEffect to make that happen. (Extra Credit 1)
   React.useEffect(() => {
     window.localStorage.setItem('squares', JSON.stringify(squares))
   }, [squares])
