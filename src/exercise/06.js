@@ -2,36 +2,13 @@
 // http://localhost:3000/isolated/exercise/06.js
 
 import * as React from 'react'
-
+import { ErrorBoundary } from 'react-error-boundary'
 import {
   PokemonForm,
   PokemonInfoFallback,
   PokemonDataView,
   fetchPokemon,
 } from '../pokemon'
-
-// We created an error boundary, which we wrapped our Pokémon info component in.
-class ErrorBoundary extends React.Component {
-  // but if there is an error in there, then react will look for the closest error boundary or 
-  // the closest component that implements the static method and it will pass us the error
-  state = {error: null}
-  static getDerivedStateFromError(error) {
-    return {error}
-  }
-  // it will trigger a re-render of this error boundary, and because that error now exists in state, 
-  // we will render whatever fallback component the user of our error boundary provided, 
-  // so we can display a nice useful error message to our users.
-  render() {
-    const {error} = this.state
-    if (error) {
-      return <this.props.FallbackComponent error={error} />
-    }
-    console.log('ErrorBoundary', this.state.error)
-    // The error boundary, by default, will just render all the children, 
-    // so it's just a regular wrapper, it doesn't really do anything,
-    return this.props.children
-  }
-}
 
 function PokemonInfo({pokemonName}) {
   const [state, setState] = React.useState({
