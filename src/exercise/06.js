@@ -10,10 +10,7 @@ import {
   fetchPokemon,
 } from '../pokemon'
 
-// First, we fixed this problem where we were showing a flash of this idle state, saying Submit a Pokémon.
 function PokemonInfo({pokemonName}) {
-  // If we know that we're going to immediately start loading a Pokémon,
-  // we just may as well initialize this status with pending.
   const [state, setState] = React.useState({
     status: pokemonName ? 'pending' : 'idle',
     pokemon: null,
@@ -43,8 +40,6 @@ function PokemonInfo({pokemonName}) {
   } else if (status === 'pending') {
     return <PokemonInfoFallback name={pokemonName} />
   } else if (status === 'rejected') {
-    // what we're doing here is we wanted to manage not only errors that we get from our fetch requests,
-    // but also errors that we get in runtime from our JavaScript
     // this will be handle by our error boundary
     throw error
   } else if (status === 'resolved') {
@@ -72,17 +67,21 @@ function App() {
     setPokemonName(newPokemonName)
   }
 
-  // Then, we can be notified when that state has been reset to fix our UI state as well.
   function handleReset() {
     setPokemonName('')
   }
-  // Then we fixed the underlying problem by removing the key prop from the ErrorBoundary.
+  // all that we did here was add this resetKeys to our ErrorBoundary,
+  // and now, when the ErrorBoundary's in an error state, it will reset itself if any of the values in this array change.
   return (
     <div className="pokemon-info-app">
       <PokemonForm pokemonName={pokemonName} onSubmit={handleSubmit} />
       <hr />
       <div className="pokemon-info">
-        <ErrorBoundary FallbackComponent={ErrorFallback} onReset={handleReset}>
+        <ErrorBoundary
+          FallbackComponent={ErrorFallback}
+          onReset={handleReset}
+          resetKeys={[pokemonName]}
+        >
           <PokemonInfo pokemonName={pokemonName} />
         </ErrorBoundary>
       </div>
