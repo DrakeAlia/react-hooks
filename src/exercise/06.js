@@ -11,11 +11,12 @@ import {
 } from '../pokemon'
 
 function PokemonInfo({pokemonName}) {
-// add a status element of state, which we keep updated as our promise progresses.
+  // add a status element of state, which we keep updated as our promise progresses.
   const [status, setStatus] = React.useState('idle')
   const [pokemon, setPokemon] = React.useState(null)
   const [error, setError] = React.useState(null)
 
+  // we keep updated as our promise progresses
   React.useEffect(() => {
     if (!pokemonName) {
       return
@@ -33,8 +34,8 @@ function PokemonInfo({pokemonName}) {
     )
   }, [pokemonName])
 
-// we render different UI based on that status variable, helping us avoid bugs, 
-// and making the code a lot more clear.
+  // we render different UI based on that status variable, helping us avoid bugs,
+  // and making the code a lot more clear.
   if (status === 'idle') {
     return 'Submit a pokemon'
   } else if (status === 'pending') {
