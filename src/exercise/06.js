@@ -10,19 +10,39 @@ import {
   fetchPokemon,
 } from '../pokemon'
 
-// what we did here is we took all three elements of state that we had before, 
-// and we put them into a single object, just like this.
+// We created an error boundary, which we wrapped our Pokémon info component in.
+class ErrorBoundary extends React.Component {
+  // but if there is an error in there, then react will look for the closest error boundary or 
+  // the closest component that implements the static method and it will pass us the error
+  state = {error: null}
+  static getDerivedStateFromError(error) {
+    return {error}
+  }
+  // it will trigger a re-render of this error boundary, and because that error now exists in state, 
+  // we will render whatever fallback component the user of our error boundary provided, 
+  // so we can display a nice useful error message to our users.
+  render() {
+    const {error} = this.state
+    if (error) {
+      return <this.props.FallbackComponent error={error} />
+    }
+    console.log('ErrorBoundary', this.state.error)
+    // The error boundary, by default, will just render all the children, 
+    // so it's just a regular wrapper, it doesn't really do anything,
+    return this.props.children
+  }
+}
+
 function PokemonInfo({pokemonName}) {
   const [state, setState] = React.useState({
     status: 'idle',
     pokemon: null,
     error: null,
   })
-  // we destructured those properties off of the state. 
+
   const {status, pokemon, error} = state
   console.log(state)
 
-  // Then instead of setting those in individual setters, we set them in a single setter.
   React.useEffect(() => {
     if (!pokemonName) {
       return
@@ -30,10 +50,10 @@ function PokemonInfo({pokemonName}) {
     setState({status: 'pending'})
     fetchPokemon(pokemonName).then(
       pokemon => {
-        setState({pokemon, status: 'resolved'})
+        setState({status: 'resolved', pokemon})
       },
       error => {
-        setState({error, status: 'rejected'})
+        setState({status: 'rejected', error})
       },
     )
   }, [pokemonName])
@@ -43,16 +63,23 @@ function PokemonInfo({pokemonName}) {
   } else if (status === 'pending') {
     return <PokemonInfoFallback name={pokemonName} />
   } else if (status === 'rejected') {
-    return (
-      <div role="alert">
-        There was an error:{' '}
-        <pre style={{whiteSpace: 'normal'}}>{error.message}</pre>
-      </div>
-    )
+    // what we're doing here is we wanted to manage not only errors that we get from our fetch requests, 
+    // but also errors that we get in runtime from our JavaScript
+    // this will be handle by our error boundary
+   throw error
   } else if (status === 'resolved') {
     return <PokemonDataView pokemon={pokemon} />
   }
   throw new Error('This shoud be impossible')
+}
+
+function ErrorFallback({error}) {
+  return (
+    <div role="alert">
+        There was an error:{' '}
+        <pre style={{whiteSpace: 'normal'}}>{error.message}</pre>
+      </div>
+  )
 }
 
 function App() {
@@ -67,7 +94,9 @@ function App() {
       <PokemonForm pokemonName={pokemonName} onSubmit={handleSubmit} />
       <hr />
       <div className="pokemon-info">
-        <PokemonInfo pokemonName={pokemonName} />
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <PokemonInfo pokemonName={pokemonName} />
+        </ErrorBoundary>
       </div>
     </div>
   )
