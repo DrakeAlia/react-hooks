@@ -11,13 +11,20 @@ import {useLocalStorageState} from '../utils'
 // 🦉 You've learned all the hooks you need to know to refactor this Board
 // component to hooks. So, let's make it happen!
 
+// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Custom Hooks Way:
+// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// We basically just went top to bottom in our class component, and moved things to Hooks. 
+// There's not really a set amount of rules or anything you can follow.
 function Board() {
   const [squares, setSquares] = useLocalStorageState(
     'squares',
     Array(9).fill(null),
   )
 
+  //  We pulled in the selectSquare function anywhere will resolve this., we removed that this. , 
+  // and referenced what that was supposed to be referencing instead.
   function selectSquare(square) {
     const nextValue = calculateNextValue(squares)
     if (calculateWinner(squares) || squares[square]) {
@@ -28,12 +35,15 @@ function Board() {
     setSquares(squaresCopy)
   }
 
+  // We also moved our renderSquare, did the same thing with that. 
   const renderSquare = i => (
     <button className="square" onClick={() => selectSquare(i)}>
       {squares[i]}
     </button>
   )
 
+// Our restart did the same thing with that. We pulled our render function out and copy and pasted that. 
+// Removed all of this., everywhere there.
   const restart = () => {
     setSquares(Array(9).fill(null))
   }
@@ -41,6 +51,9 @@ function Board() {
   const nextValue = calculateNextValue(squares)
   const winner = calculateWinner(squares)
   let status = calculateStatus(winner, squares, nextValue)
+
+  // We also managed to pull componentDidMount(), componentDidUpdate into a useEffect, which ultimately we were able to 
+  // remove thanks to the logic reuse that we have from this useLocalStorageState custom hook.
 
   return (
     <div>
@@ -115,7 +128,10 @@ function App() {
 
 export default App
 
+// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Class Component Way:
+// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // class Board extends React.Component {
 //   state = {
 //     squares:
