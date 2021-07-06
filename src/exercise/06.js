@@ -10,6 +10,7 @@ import {PokemonForm} from '../pokemon'
 
 function PokemonInfo({pokemonName}) {
   // 🐨 Have state for the pokemon (null)
+  // const pokemon = 
   // 🐨 use React.useEffect where the callback should be called whenever the
   // pokemon name changes.
   // 💰 DON'T FORGET THE DEPENDENCIES ARRAY!

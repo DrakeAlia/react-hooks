@@ -6,11 +6,11 @@ import * as React from 'react'
 import VanillaTilt from 'vanilla-tilt'
 
 function Tilt({children}) {
-  // 🐨 create a ref here with React.useRef()
-   const tiltRef = React.useRef()
+  // 🐨 create a ref here with React.useRef() (X)
+  const tiltRef = React.useRef()
 
   // 🐨 add a `React.useEffect` callback here and use VanillaTilt to make your
-  // div look fancy.
+  // div look fancy. (X)
   // 💰 like this:
   // const tiltNode = tiltRef.current
   // VanillaTilt.init(tiltNode, {
@@ -19,6 +19,8 @@ function Tilt({children}) {
   //   glare: true,
   //   'max-glare': 0.5,
   // })
+  console.log(tiltRef)
+
   React.useEffect(() => {
     const tiltNode = tiltRef.current
     VanillaTilt.init(tiltNode, {
@@ -31,16 +33,15 @@ function Tilt({children}) {
     return () => tiltNode.vanillaTilt.destroy()
   }, [])
 
-  //
   // 💰 Don't forget to return a cleanup function. VanillaTilt.init will add an
-  // object to your DOM node to cleanup:
+  // object to your DOM node to cleanup: (X)
   // `return () => tiltNode.vanillaTilt.destroy()`
-  //
+
   // 💰 Don't forget to specify your effect's dependencies array! In our case
   // we know that the tilt node will never change, so make it `[]`. Ask me about
-  // this for a more in depth explanation.
+  // this for a more in depth explanation. (X)
 
-  // 🐨 add the `ref` prop to the `tilt-root` div here:
+  // 🐨 add the `ref` prop to the `tilt-root` div here: (X)
   return (
     <div ref={tiltRef} className="tilt-root">
       <div className="tilt-child">{children}</div>
