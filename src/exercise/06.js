@@ -10,32 +10,34 @@ import {
   fetchPokemon,
 } from '../pokemon'
 
+// what we did here is we took all three elements of state that we had before, 
+// and we put them into a single object, just like this.
 function PokemonInfo({pokemonName}) {
-  // add a status element of state, which we keep updated as our promise progresses.
-  const [status, setStatus] = React.useState('idle')
-  const [pokemon, setPokemon] = React.useState(null)
-  const [error, setError] = React.useState(null)
+  const [state, setState] = React.useState({
+    status: 'idle',
+    pokemon: null,
+    error: null,
+  })
+  // we destructured those properties off of the state. 
+  const {status, pokemon, error} = state
+  console.log(state)
 
-  // we keep updated as our promise progresses
+  // Then instead of setting those in individual setters, we set them in a single setter.
   React.useEffect(() => {
     if (!pokemonName) {
       return
     }
-    setStatus('pending')
+    setState({status: 'pending'})
     fetchPokemon(pokemonName).then(
       pokemon => {
-        setPokemon(pokemon)
-        setStatus('resolved')
+        setState({pokemon, status: 'resolved'})
       },
       error => {
-        setError(error)
-        setStatus('rejected')
+        setState({error, status: 'rejected'})
       },
     )
   }, [pokemonName])
 
-  // we render different UI based on that status variable, helping us avoid bugs,
-  // and making the code a lot more clear.
   if (status === 'idle') {
     return 'Submit a pokemon'
   } else if (status === 'pending') {
